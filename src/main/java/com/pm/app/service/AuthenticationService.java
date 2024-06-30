@@ -17,8 +17,10 @@ import com.pm.app.repository.RoleRepository;
 @Transactional
 public class AuthenticationService {
 
+  @SuppressWarnings("unused")
   private RoleRepository roleRepository;
 
+  @SuppressWarnings("unused")
   private PasswordEncoder passwordEncoder;
 
   private AuthenticationManager authenticationManager;
