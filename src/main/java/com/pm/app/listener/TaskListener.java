@@ -1,14 +1,18 @@
 package com.pm.app.listener;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.pm.app.entity.Project;
 import com.pm.app.entity.Task;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.PreRemove;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
+@Service
 public class TaskListener {
 
   @PersistenceContext
@@ -16,12 +20,11 @@ public class TaskListener {
 
   @PostPersist
   @PostUpdate
+  @Transactional
   public void onTaskChange(Task task) {
     // Update the Project's totalHours
     Project project = task.getProject();
     project.setTotalHours(calculateTotalHours(project));
-    // Persist the updated Project
-    entityManager.merge(project);
   }
 
   @PreRemove
@@ -30,8 +33,6 @@ public class TaskListener {
     Project project = task.getProject();
     // Calculate the total hours for the project, excluding the removed task
     project.setTotalHours(calculateTotalHours(project, task));
-    // Persist the updated Project
-    entityManager.merge(project);
   }
 
   private float calculateTotalHours(Project project) {

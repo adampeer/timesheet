@@ -1,5 +1,6 @@
 package com.pm.app.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,18 +48,27 @@ public class User implements UserDetails {
           @JoinColumn(name = "role_id") })
   private Set<Role> authorities;
 
+  @Column(name = "user_project")
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinTable(name = "user_project_junction", joinColumns = {
+      @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+          @JoinColumn(name = "project_id") })
+  private Set<Project> projects = new HashSet<>();
+
   public User() {
     super();
     authorities = new HashSet<>();
   }
 
-  public User(Long userId, String firstName, String lastName, String email, String password, Set<Role> authorities) {
+  public User(Long userId, String firstName, String lastName, String email, String password, Set<Role> authorities,
+      Set<Project> projects) {
     this.userId = userId;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
     this.authorities = authorities;
+    this.projects = projects;
   }
 
   public Long getUserId() {
@@ -103,6 +113,14 @@ public class User implements UserDetails {
 
   public void setAuthorities(Set<Role> authorities) {
     this.authorities = authorities;
+  }
+
+  public Set<Project> getProjects() {
+    return projects;
+  }
+
+  public void setProjects(Set<Project> projects) {
+    this.projects = projects;
   }
 
   @Override

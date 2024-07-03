@@ -1,6 +1,7 @@
 package com.pm.app.entity;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -9,8 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -34,12 +33,14 @@ public class Project {
 
   private LocalDate deadline;
 
-  @ManyToMany(cascade = CascadeType.ALL)
-  @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-  private Set<User> users;
+  @ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
+  private Set<User> users = new HashSet<>();
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-  private Set<Task> tasks;
+  private Set<Task> tasks = new HashSet<>();
+
+  public Project() {
+  }
 
   public Project(Long projectId, String projectName, String projectDescription, float totalHours, float remainingHours,
       LocalDate deadline, Set<User> users, Set<Task> tasks) {
@@ -82,7 +83,7 @@ public class Project {
   }
 
   public void setTotalHours(float totalHours) {
-    this.totalHours = totalHours;
+    this.totalHours = calculateTotalHours();
   }
 
   public float getRemainingHours() {
@@ -115,6 +116,10 @@ public class Project {
 
   public void setTasks(Set<Task> tasks) {
     this.tasks = tasks;
+  }
+
+  public float calculateTotalHours() {
+    return (float) tasks.stream().mapToDouble(Task::getTotalHours).sum();
   }
 
 }

@@ -35,6 +35,10 @@ public class Task {
   @JoinColumn(name = "project_id")
   private Project project;
 
+  public Task() {
+
+  }
+
   public Task(Long taskId, String taskName, String taskDescription, float totalHours, float remainingHours,
       Project project) {
     this.taskId = taskId;
