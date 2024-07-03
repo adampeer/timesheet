@@ -31,9 +31,7 @@ public class AppApplication {
 	@Bean
 	CommandLineRunner run(RoleRepository roleRepository, PasswordEncoder passwordEncode) {
 
-		return args -> {
-			dataInitialisationService.initialiseData();
-		};
+		return args -> dataInitialisationService.initialiseData();
 	}
 
 }
