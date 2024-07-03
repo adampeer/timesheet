@@ -1,6 +1,5 @@
 package com.pm.app.entity;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +52,7 @@ public class User implements UserDetails {
   @JoinTable(name = "user_project_junction", joinColumns = {
       @JoinColumn(name = "user_id") }, inverseJoinColumns = {
           @JoinColumn(name = "project_id") })
-  private Set<Project> projects = new HashSet<>();
+  private transient Set<Project> projects = new HashSet<>();
 
   public User() {
     super();
