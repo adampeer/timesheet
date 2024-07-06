@@ -10,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -33,9 +32,6 @@ public class Project {
 
   private LocalDate deadline;
 
-  @ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
-  private Set<User> users = new HashSet<>();
-
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private Set<Task> tasks = new HashSet<>();
 
@@ -43,14 +39,13 @@ public class Project {
   }
 
   public Project(Long projectId, String projectName, String projectDescription, float totalHours, float remainingHours,
-      LocalDate deadline, Set<User> users, Set<Task> tasks) {
+      LocalDate deadline, Set<Task> tasks) {
     this.projectId = projectId;
     this.projectName = projectName;
     this.projectDescription = projectDescription;
     this.totalHours = totalHours;
     this.remainingHours = remainingHours;
     this.deadline = deadline;
-    this.users = users;
     this.tasks = tasks;
   }
 
@@ -83,7 +78,7 @@ public class Project {
   }
 
   public void setTotalHours(float totalHours) {
-    this.totalHours = calculateTotalHours();
+    this.totalHours = totalHours;
   }
 
   public float getRemainingHours() {
@@ -102,14 +97,6 @@ public class Project {
     this.deadline = deadline;
   }
 
-  public Set<User> getUsers() {
-    return users;
-  }
-
-  public void setUsers(Set<User> users) {
-    this.users = users;
-  }
-
   public Set<Task> getTasks() {
     return tasks;
   }
@@ -118,8 +105,8 @@ public class Project {
     this.tasks = tasks;
   }
 
-  public float calculateTotalHours() {
-    return (float) tasks.stream().mapToDouble(Task::getTotalHours).sum();
+  public void calculateTotalHours() {
+    this.totalHours = (float) tasks.stream().mapToDouble(Task::getTotalHours).sum();
   }
 
 }

@@ -1,7 +1,5 @@
 package com.pm.app;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,8 +13,6 @@ import com.pm.app.service.DataInitialisationService;
 @SpringBootApplication
 @EnableTransactionManagement
 public class AppApplication {
-
-	private static final Logger log = LoggerFactory.getLogger(AppApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppApplication.class, args);

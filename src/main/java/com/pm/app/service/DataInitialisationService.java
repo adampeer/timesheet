@@ -33,10 +33,6 @@ public class DataInitialisationService {
   @Transactional
   public void initialiseData() {
 
-    // Create and add users
-    User admin = createAndAddUser(1L, "John", "Doe", "john.doe@email.com", "password", StringUtils.ADMIN);
-    User user = createAndAddUser(2L, "Jim", "Doe", "jim.doe@email.com", "password", StringUtils.USER);
-
     // Create and add projects
     Project project1 = createAndAddProject(1L, "Project 1", "Project 1 description", LocalDate.of(2024, 10, 10));
     Project project2 = createAndAddProject(2L, "Project 2", "Project 2 description", LocalDate.of(2024, 12, 10));
@@ -50,8 +46,9 @@ public class DataInitialisationService {
     createAndAddTask(5L, "Task 5", "Task 5 description", 8.0f, project2);
     createAndAddTask(6L, "Task 6", "Task 6 description", 8.0f, project2);
 
-    admin.setProjects(Stream.of(project1, project2).collect(Collectors.toSet()));
-    user.setProjects(Stream.of(project1).collect(Collectors.toSet()));
+    // Create and add users
+    createAndAddUser(1L, "John", "Doe", "john.doe@email.com", "password", StringUtils.ADMIN, project1, project2);
+    createAndAddUser(2L, "Jim", "Doe", "jim.doe@email.com", "password", StringUtils.USER, project2);
   }
 
   // Helper method to create and add a project
@@ -79,7 +76,7 @@ public class DataInitialisationService {
 
   // Helper method to create and add a user
   private User createAndAddUser(Long id, String firstName, String lastName, String email, String password,
-      String role) {
+      String role, Project... projects) {
     User user = new User();
     user.setUserId(id);
     user.setFirstName(firstName);
@@ -87,6 +84,7 @@ public class DataInitialisationService {
     user.setEmail(email);
     user.setPassword(password);
     user.setAuthorities(Stream.of(new Role(role)).collect(Collectors.toSet()));
+    user.setProjects(Stream.of(projects).collect(Collectors.toSet()));
     userServiceInterface.save(user);
     return user;
   }
